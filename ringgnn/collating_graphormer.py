@@ -6,7 +6,7 @@ from typing import Any, Dict, List, Mapping
 import numpy as np
 import torch
 
-from transformers.utils import is_cython_available, requires_backends
+from ....utils import is_cython_available, requires_backends
 
 
 if is_cython_available():
@@ -26,25 +26,20 @@ def convert_to_single_emb(x, offset: int = 512):
 def preprocess_item(item, keep_features=True):
     requires_backends(preprocess_item, ["cython"])
 
-    edge_attr = None
-    if keep_features and hasattr(item, 'edge_attr'):
-        edge_attr = np.asarray(item.edge_attr, dtype=np.int64)
+    if keep_features and "edge_attr" in item.keys():  # edge_attr
+        edge_attr = np.asarray(item["edge_attr"], dtype=np.int64)
     else:
-        edge_attr = np.ones((item.edge_index.shape[1], 1), dtype=np.int64)  # same embedding for all
+        edge_attr = np.ones((len(item["edge_index"][0]), 1), dtype=np.int64)  # same embedding for all
 
-    num_nodes = None
-    node_feature = None
-    if keep_features and hasattr(item, 'x'):
-        node_feature = np.asarray(item.x, dtype=np.int64)
-        num_nodes = node_feature.shape[0]
+    if keep_features and "node_feat" in item.keys():  # input_nodes
+        node_feature = np.asarray(item["node_feat"], dtype=np.int64)
     else:
-        num_nodes = item.num_nodes if hasattr(item, 'num_nodes') else item.edge_index.max().item() + 1
-        node_feature = np.ones((num_nodes, 1), dtype=np.int64)  # same embedding for all
+        node_feature = np.ones((item["num_nodes"], 1), dtype=np.int64)  # same embedding for all
 
-    edge_index = np.asarray(item.edge_index, dtype=np.int64)
+    edge_index = np.asarray(item["edge_index"], dtype=np.int64)
 
     input_nodes = convert_to_single_emb(node_feature) + 1
-    num_nodes = num_nodes
+    num_nodes = item["num_nodes"]
 
     if len(edge_attr.shape) == 1:
         edge_attr = edge_attr[:, None]
@@ -69,10 +64,8 @@ def preprocess_item(item, keep_features=True):
     item["in_degree"] = np.sum(adj, axis=1).reshape(-1) + 1  # we shift all indices by one for padding
     item["out_degree"] = item["in_degree"]  # for undirected graph
     item["input_edges"] = input_edges + 1  # we shift all indices by one for padding
-    if hasattr(item, "y"):
-        item["labels"] = item.y
-    else:
-        item["labels"] = item.labels
+    if "labels" not in item:
+        item["labels"] = item["y"]
 
     return item
 
