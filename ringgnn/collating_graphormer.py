@@ -6,7 +6,7 @@ from typing import Any, Dict, List, Mapping
 import numpy as np
 import torch
 
-from ....utils import is_cython_available, requires_backends
+from transformers.utils import is_cython_available, requires_backends
 
 
 if is_cython_available():
