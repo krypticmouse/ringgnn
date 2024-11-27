@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "ringgnn"
+version = "0.1.0"
+description = ""
+authors = ["Herumb Shandilya <herumbshandilya123@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+torch = "^2.5.1"
+torch-geometric = "^2.6.1"
+datasets = "^3.1.0"
+transformers = "^4.46.3"
+networkx = "^3.4.2"
+logger = "^1.4"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
