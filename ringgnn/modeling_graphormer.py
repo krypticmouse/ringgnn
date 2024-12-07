@@ -12,7 +12,7 @@ from transformers.modeling_outputs import (
 from torch.nn import BCEWithLogitsLoss, CrossEntropyLoss, MSELoss
 from typing import Iterable, Iterator, List, Optional, Tuple, Union
 
-from ringgnn.config import GraphormerConfig
+from .config import GraphormerConfig
 
 
 def quant_noise(module: nn.Module, p: float, block_size: int):
