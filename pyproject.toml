@@ -13,6 +13,51 @@ datasets = "^3.1.0"
 transformers = "^4.46.3"
 networkx = "^3.4.2"
 logger = "^1.4"
+pydantic = "^2.10.3"
+pyright = "^1.1.390"
+
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.8.2"
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "N",  # PEP8 naming convetions
+]
+ignore = [
+    "C901",  # too complex
+    "W191",  # indentation contains tabs
+    "D401",  # imperative mood
+    "I001"
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+
+[tool.pyright]
+include = ["ringgnn"]
+exclude = [
+    "**/node_modules",
+    "**/__pycache__",
+    "experiments"
+]
+defineConstant = { DEBUG = true }
+
+reportMissingImports = "error"
+reportMissingTypeStubs = false
+
+pythonVersion = "3.10"
+pythonPlatform = "Linux"
 
 
 [build-system]
