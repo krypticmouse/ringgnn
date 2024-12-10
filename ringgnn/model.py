@@ -11,8 +11,8 @@ from torch_geometric.nn import (
     global_add_pool,
 )
 
-from ringgnn.schemas import ModelConfig
-from ringgnn.types import GNN, Scheduler, Task
+from .schemas import ModelConfig
+from .types import GNN, Scheduler, Task
 
 
 class GNNMoleculeClassifier(nn.Module):
