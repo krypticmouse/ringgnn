@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "ringgnn"
+name = "ringsage"
 version = "0.1.0"
 description = ""
 authors = ["Herumb Shandilya <herumbshandilya123@gmail.com>"]
@@ -38,7 +38,9 @@ ignore = [
     "C901",  # too complex
     "W191",  # indentation contains tabs
     "D401",  # imperative mood
-    "I001"
+    "I001",
+    "N812",
+    "N803", 
 ]
 
 [tool.ruff.lint.pydocstyle]
@@ -46,7 +48,7 @@ convention = "google"
 
 
 [tool.pyright]
-include = ["ringgnn"]
+include = ["ringsage"]
 exclude = [
     "**/node_modules",
     "**/__pycache__",

@@ -35,19 +35,21 @@ class RingSageConv(MessagePassing):
 
     def forward(self, x, edge_index, edge_attr, cycle_info, size=None, vn=None):
         num_cycles = len(cycle_info)
+
+        out_vn = None
         if num_cycles > 0:
-          if vn is None:
-              vn = nn.Parameter(torch.zeros(num_cycles, self.in_channels))
+            if vn is None:
+                vn = nn.Parameter(torch.zeros(num_cycles, self.in_channels))
 
-          # Construct custom edge_index for propagating node features to virtual nodes
-          vn_edge_index = self.construct_vn_edge_index(cycle_info, x.size(0))
+            # Construct custom edge_index for propagating node features to virtual nodes
+            vn_edge_index = self.construct_vn_edge_index(cycle_info, x.size(0))
 
-          # Update virtual node embeddings using propagate
-          out_vn = self.propagate(vn_edge_index, x=(x, vn), size=(x.size(0), vn.size(0))) # num_cycles x input_dim
-          out_vn = self.lin_vn_l(vn) + self.lin_vn_r(out_vn)
+            # Update virtual node embeddings using propagate
+            out_vn = self.propagate(vn_edge_index, x=(x, vn), size=(x.size(0), vn.size(0))) # num_cycles x input_dim
+            out_vn = self.lin_vn_l(vn) + self.lin_vn_r(out_vn)
 
-          # Update x embeddings using virtual node embeddings
-          x = x + self.distribute_vn_to_nodes(out_vn, cycle_info, x.size(0))
+            # Update x embeddings using virtual node embeddings
+            x = x + self.distribute_vn_to_nodes(out_vn, cycle_info, x.size(0))
 
         # Regular GraphSAGE update
         out = self.propagate(edge_index, x=(x, x), edge_attr=edge_attr, size=size)
@@ -55,7 +57,7 @@ class RingSageConv(MessagePassing):
 
         if self.normalize:
             out = F.normalize(out, p=2, dim=-1)
-            out_vn = F.normalize(out_vn, p=2, dim=-1)
+            out_vn = F.normalize(out_vn, p=2, dim=-1)       # type: ignore
         return out, out_vn
 
 
@@ -79,12 +81,12 @@ class RingSageConv(MessagePassing):
 
 
     def message(self, x_j, edge_attr=None):
-        if edge_attr is not inspect._empty:
+        if edge_attr is not inspect._empty and edge_attr is not None:
             return torch.cat([x_j, edge_attr.unsqueeze(-1)], dim=-1)
         else:
             return x_j
 
 
-    def aggregate(self, inputs, index, dim_size=None):
+    def aggregate(self, inputs, index, ptr = None, dim_size=None):
         node_dim = self.node_dim
         return torch_scatter.scatter(inputs, index, dim=node_dim, reduce='mean')
