@@ -15,7 +15,6 @@ logger = "^1.4"
 pydantic = "^2.10.3"
 pyright = "^1.1.390"
 torch = "^2.5.1"
-torch-scatter = {git = "https://git@github.com/rusty1s/pytorch_scatter.git"}
 
 
 [tool.poetry.group.dev.dependencies]
