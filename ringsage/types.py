@@ -1,29 +1,40 @@
 from enum import Enum
 
 
-class Task(Enum, str):
-    """Task type for the model."""
+class Task(str, Enum):
+    """
+    Task type for GNN.
+    """
     GRAPH_CLASSIFICATION = 'graph_classification'
     GRAPH_REGRESSION = 'graph_regression'
 
 
-class GNN(Enum, str):
-    """GNN module to use for message passing."""
+class GNN(str, Enum):
+    """
+    Message Passing types for GNN.
+    """
     GIN = 'gin'
     GCN = 'gcn'
     GAT = 'gat'
     GATv2 = 'gatv2'
+    GEN = 'gen'
+    RINGSAGE = 'ringsage'
+    GRAPHSAGE = 'graphsage'
 
 
-class Scheduler(Enum, str):
-    """Learning rate scheduler."""
+class Scheduler(str, Enum):
+    """
+    Learning rate scheduler type.
+    """
     COSINE = 'cosine'
     STEP = 'step'
     PLATEAU = 'plateau'
 
 
-class Optimizer(Enum, str):
-    """Optimizer for training the model."""
+class Optimizer(str, Enum):
+    """
+    Optimizer type for updating GNN parameters.
+    """
     ADAM = 'adam'
     SGD = 'sgd'
     ADAGRAD = 'adagrad'
