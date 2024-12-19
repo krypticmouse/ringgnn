@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ringsage"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
 authors = ["Herumb Shandilya <herumbshandilya123@gmail.com>"]
 readme = "README.md"
